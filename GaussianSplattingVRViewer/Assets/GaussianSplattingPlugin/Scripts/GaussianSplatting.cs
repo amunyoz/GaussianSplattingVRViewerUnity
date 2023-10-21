@@ -73,6 +73,8 @@ public class GaussianSplatting : MonoBehaviour
 
     bool TryGetEyesPoses(out Vector3 lpos, out Vector3 rpos, out Quaternion lrot, out Quaternion rrot)
     {
+        
+
         lpos = Vector3.zero;
         rpos = Vector3.zero;
         lrot = Quaternion.identity;
@@ -94,6 +96,7 @@ public class GaussianSplatting : MonoBehaviour
                 if (state.TryGetRotation(out Quaternion trot)) { rrot = trot; nbfound += 1; }
             }
         }
+        Debug.Log("TryGetEyesPoses called. Result: " + (nbfound == 4));
         return nbfound == 4;
     }
 
@@ -152,6 +155,8 @@ public class GaussianSplatting : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Update called. isXr: " + isXr);
+
         if (trackTRS != null)
         {
             renderScale = trackTRS.localScale.x;
@@ -182,7 +187,7 @@ public class GaussianSplatting : MonoBehaviour
             isInError = true;
             return;
         }
-
+       
         if (GaussianSplattingNI.IsAPIReady())
         {
             initialized = GaussianSplattingNI.IsInitialized();
@@ -285,6 +290,7 @@ public class GaussianSplatting : MonoBehaviour
                     {
                         if (TryGetEyesPoses(out Vector3 lpos, out Vector3 rpos, out Quaternion lrot, out Quaternion rrot))
                         {
+                            Debug.Log("ok to get XR poses");
                             if (real_leye == null) { real_leye = new GameObject("real leye"); real_leye.transform.parent = cam.transform.parent; }
                             real_leye.transform.localPosition = lpos;
                             real_leye.transform.localRotation = lrot;
@@ -295,6 +301,9 @@ public class GaussianSplatting : MonoBehaviour
                         }
                         else
                         {
+                           
+                                Debug.Log("Failed to get XR poses");
+                            
                             doit = false;
                         }
                     }

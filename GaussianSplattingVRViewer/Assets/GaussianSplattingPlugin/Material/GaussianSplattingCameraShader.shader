@@ -8,11 +8,19 @@ Shader "GaussianSplatting/CameraShader"
     }
     SubShader
     {
-        // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        // No culling or depth -- do the depth instead
+       // Cull Off ZWrite Off ZTest Always
+        Cull Off ZWrite On ZTest LEqual 
 
         Pass
         {
+//**
+           // ZWrite Off
+          //  Blend OneMinusDstAlpha One
+          //  Cull Off
+
+
+//**
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -45,6 +53,7 @@ Shader "GaussianSplatting/CameraShader"
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+    
                 return o;
             }
 
