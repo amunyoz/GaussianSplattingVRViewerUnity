@@ -9,8 +9,8 @@ Shader "GaussianSplatting/CameraShader"
     SubShader
     {
         // No culling or depth -- do the depth instead
-       // Cull Off ZWrite Off ZTest Always
-        Cull Off ZWrite On ZTest LEqual 
+        Cull Off ZWrite Off ZTest Always
+      //  Cull Off ZWrite On ZTest LEqual 
 
         Pass
         {

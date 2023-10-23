@@ -155,7 +155,7 @@ public class GaussianSplatting : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Update called. isXr: " + isXr);
+        //Debug.Log("Update called. isXr: " + isXr);
 
         if (trackTRS != null)
         {
