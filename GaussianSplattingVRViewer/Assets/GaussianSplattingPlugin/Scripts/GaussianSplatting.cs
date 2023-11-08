@@ -374,7 +374,7 @@ public class GaussianSplatting : MonoBehaviour
         }
     }
 
-    void OnPreRenderCallback(Camera camera) {
+    void OnPreRenderCallback_old(Camera camera) {
         if (loaded && renderEventFunc != System.IntPtr.Zero && sendDrawEvent && waitForTexture)
         {
             waitForTexture = false;
@@ -401,6 +401,44 @@ public class GaussianSplatting : MonoBehaviour
             }
         }
     }
+
+    void OnPreRenderCallback(Camera camera)
+    {
+        // Aquí puedes renderizar cualquier contenido de la cámara si es necesario, pero dado que este callback se llama 
+        // justo antes de que la cámara empiece su renderización, deberías poder confiar en que la cámara renderizará su 
+        // contenido por sí misma.
+
+        // Luego, renderiza los splats gaussianos.
+        if (loaded && renderEventFunc != System.IntPtr.Zero && sendDrawEvent && waitForTexture)
+        {
+            waitForTexture = false;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            while (!GaussianSplattingNI.IsDrawn() && sw.ElapsedMilliseconds < 1000)
+            {
+                Thread.Sleep(0);
+            }
+
+            if (sw.ElapsedMilliseconds >= 1000)
+            {
+                countDrawErrors += 1;
+                // Si hay 5 intentos consecutivos en error, detente.
+                if (countDrawErrors >= 5)
+                {
+                    lastMessage = GaussianSplattingNI.GetLastMessage();
+                    Debug.Log("Stop draw error: " + lastMessage);
+                    isInError = true;
+                    // Deja de intentarlo...
+                    sendDrawEvent = false;
+                }
+            }
+            else
+            {
+                countDrawErrors = 0;
+            }
+        }
+    }
+
+
 
     float[] matToFloat(Matrix4x4 mat)
     {
